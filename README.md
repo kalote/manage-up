@@ -2,7 +2,7 @@
 
 This is a test project to start interacting with the Universal Profile of LUKSO blockchain. Expected features:
 
-- manage profile picture, banner, description, tags, links
+- _manage profile picture, banner, description, tags, links_ (can be done in the UP! wallet)
 - manage key manager permissions
 - manage universal receiver (automation on receive assets)
 - manage vaults

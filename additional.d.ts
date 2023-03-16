@@ -8,7 +8,7 @@ interface ContextProps {
 
 interface WalletContext {
   connectWallet: () => Promise<void>;
-  isWalletConnected: () => Promise<void>;
   currentAccount: string;
   isLoading: boolean;
+  profile: FetchDataOutput;
 }
