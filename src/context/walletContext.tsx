@@ -17,12 +17,13 @@ if (typeof window !== "undefined") {
 export const WalletProvider: React.FC<ContextProps> = ({ children }) => {
   const [currentAccount, setCurrentAccount] = useState<string>("");
   const [isLoading, setIsLoading] = useState<boolean>(false);
-  const [profile, setProfile] = useState<FetchDataOutput | {}>({});
+  const [profile, setProfile] = useState<LSP3Profile | undefined>();
 
   const connectWallet = async (): Promise<void> => {
     try {
       if (!eth) return alert("install UP!");
       setIsLoading(true);
+
       const provider = new ethers.providers.Web3Provider(eth);
       // popup connect
       await provider.send("eth_requestAccounts", []);
@@ -48,8 +49,10 @@ export const WalletProvider: React.FC<ContextProps> = ({ children }) => {
       address,
       eth
     );
-    const data = await myErc725Contract.fetchData("LSP3Profile");
-    setProfile(data);
+    const data = (await myErc725Contract.fetchData(
+      "LSP3Profile"
+    )) as ProfileData;
+    setProfile(data.value.LSP3Profile);
   };
 
   const switchToLuksoL16Tesnet = async () => {
