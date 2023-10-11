@@ -37,10 +37,13 @@ export const WalletProvider: React.FC<ContextProps> = ({ children }) => {
       // check if support LSP0 interface (UP)
       const isUP = await ERC725.supportsInterface("LSP0ERC725Account", {
         address,
-        rpcUrl: RPC_URLS.TESTNET
+        rpcUrl: RPC_URLS.TESTNET,
       });
-      if (!isUP) return alert("Connected Wallet is not a UP!");
-      
+      if (!isUP) {
+        setIsLoading(false);
+        return alert("Connected Wallet is not a UP!");
+      }
+
       setCurrentAccount(address);
       await getUPData(address);
       setIsLoading(false);
