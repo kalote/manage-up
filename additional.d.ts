@@ -1,3 +1,6 @@
+// additional.d.ts
+/// <reference types="next-images" />
+
 interface Window {
   ethereum: any;
 }

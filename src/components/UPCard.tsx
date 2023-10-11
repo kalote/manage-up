@@ -2,7 +2,6 @@ import { useContext, useState } from "react";
 import useLegacyEffect from "@/hooks/useLegacyEffect";
 import { WalletContext } from "@/context/walletContext";
 import Image from "next/image";
-import emptyProfile from "../../public/emptyProfile.jpg";
 
 const styles = {
   cardWrapper: `bg-slate-100 rounded-xl p-8 dark:bg-slate-800 mt-8 w-1/2 max-w-lg`,
@@ -41,7 +40,7 @@ const UPCard: React.FC = () => {
             />
           ) : (
             <Image
-              src={emptyProfile}
+              src={"/emptyProfile.jpg"}
               alt="Empty user profile picture"
               className={styles.cardImage}
             />

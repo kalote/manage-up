@@ -1,6 +1,5 @@
-import React, { createContext, useEffect, useState } from "react";
+import React, { createContext, useState } from "react";
 import { ERC725, ERC725JSONSchema } from "@erc725/erc725.js";
-import { FetchDataOutput } from "@erc725/erc725.js/build/main/src/types/decodeData";
 import LSPs from "@erc725/erc725.js/schemas/LSP3UniversalProfileMetadata.json";
 import { ethers } from "ethers";
 
@@ -29,33 +28,46 @@ export const WalletProvider: React.FC<ContextProps> = ({ children }) => {
       await provider.send("eth_requestAccounts", []);
       const signer = provider.getSigner();
 
-      // check L16 test network
-      if ((await signer.getChainId()) !== 2828) {
-        await switchToLuksoL16Tesnet();
+      // check testnet
+      if ((await signer.getChainId()) !== 4201) {
+        await switchToLuksoTesnet();
       }
       const address = await signer.getAddress();
+
+      // check if support LSP0 interface (UP)
+      const isUP = await ERC725.supportsInterface("LSP0ERC725Account", {
+        address,
+        rpcUrl: RPC_URLS.TESTNET
+      });
+      if (!isUP) return alert("Connected Wallet is not a UP!");
+      
       setCurrentAccount(address);
       await getUPData(address);
       setIsLoading(false);
     } catch (error) {
-      console.error(error);
+      console.log(error);
       throw new Error("No ethereum object.");
     }
   };
 
   const getUPData = async (address: string) => {
-    const myErc725Contract = new ERC725(
-      LSPs as ERC725JSONSchema[],
-      address,
-      eth
-    );
-    const data = (await myErc725Contract.fetchData(
-      "LSP3Profile"
-    )) as ProfileData;
-    setProfile(data.value.LSP3Profile);
+    try {
+      const myErc725Contract = new ERC725(
+        LSPs as ERC725JSONSchema[],
+        address,
+        eth
+      );
+      const data = (await myErc725Contract.fetchData(
+        "LSP3Profile"
+      )) as ProfileData;
+      setProfile(data.value.LSP3Profile);
+    } catch (error) {
+      console.error(error);
+      throw new Error("Issue getting the Universal Profile Data");
+    }
   };
 
-  const switchToLuksoL16Tesnet = async () => {
+  const switchToLuksoTesnet = async () => {
     try {
       await eth.request({
         method: "wallet_switchEthereumChain",
@@ -64,27 +76,27 @@ export const WalletProvider: React.FC<ContextProps> = ({ children }) => {
     } catch (error: any) {
       // This error code indicates that the chain has not been added to MetaMask.
       if (error?.code === 4902) {
-        addLuksoL16Testnet();
+        addLuksoTestnet();
       }
     }
   };
 
-  const addLuksoL16Testnet = async () => {
+  const addLuksoTestnet = async () => {
     try {
       // Open request to add custom network
       await window.ethereum.request({
         method: "wallet_addEthereumChain",
         params: [
           {
-            chainId: CHAIN_IDS.L16_HEX,
+            chainId: CHAIN_IDS.TESTNET_HEX,
             chainName: "LUKSO L16",
             nativeCurrency: {
               name: "LUKSO",
               symbol: "LYXt",
               decimals: 18,
             },
-            rpcUrls: [RPC_URLS.L16],
-            blockExplorerUrls: [BLOCK_EXPLORER_URLS.L16],
+            rpcUrls: [RPC_URLS.TESTNET],
+            blockExplorerUrls: [BLOCK_EXPLORER_URLS.TESTNET],
           },
         ],
       });

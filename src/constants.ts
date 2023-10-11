@@ -1,14 +1,14 @@
 export const IPFS_GATEWAY_BASE_URL = "https://2eff.lukso.dev/ipfs/";
 
 export const CHAIN_IDS = {
-  L16: 2828,
-  L16_HEX: "0xb0c",
+  TESTNET: 4201,
+  TESTNET_HEX: "0x1069",
 };
 
 export const RPC_URLS = {
-  L16: "https://rpc.l16.lukso.network",
+  TESTNET: "https://rpc.testnet.lukso.network",
 };
 
 export const BLOCK_EXPLORER_URLS = {
-  L16: "https://explorer.execution.l16.lukso.network",
+  TESTNET: "https://explorer.execution.testnet.lukso.network",
 };
